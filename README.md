@@ -59,11 +59,7 @@ docker run -d \
 docker build -t self-hosted-agent -f linux/Dockerfile .
 ```
 
-To pin a specific agent version:
-
-```bash
-docker build --build-arg AGENT_VERSION=4.248.0 -t self-hosted-agent -f linux/Dockerfile .
-```
+The build automatically pulls the latest Azure Pipelines agent release from GitHub.
 
 ## Publishing
 

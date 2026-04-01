@@ -1,6 +1,5 @@
 FROM ubuntu:24.04
 
-ARG AGENT_VERSION=4.248.0
 ARG DEBIAN_FRONTEND=noninteractive
 
 # System packages
@@ -86,8 +85,9 @@ RUN pipx install checkov
 RUN useradd -m agent
 WORKDIR /home/agent/azp-agent
 
-RUN curl -fsSL "https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz" \
-      -o azp-agent.tar.gz \
+RUN AZP_AGENT_URL=$(curl -fsSL https://api.github.com/repos/microsoft/azure-pipelines-agent/releases/latest \
+      | jq -r '.assets[] | select(.name | test("vsts-agent-linux-x64-.+\\.tar\\.gz$")) | .browser_download_url') \
+    && curl -fsSL "${AZP_AGENT_URL}" -o azp-agent.tar.gz \
     && tar xzf azp-agent.tar.gz \
     && rm azp-agent.tar.gz \
     && ./bin/installdependencies.sh \
