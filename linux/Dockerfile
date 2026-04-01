@@ -85,9 +85,10 @@ RUN pipx install checkov
 RUN useradd -m agent
 WORKDIR /home/agent/azp-agent
 
-RUN AZP_AGENT_URL=$(curl -fsSL https://api.github.com/repos/microsoft/azure-pipelines-agent/releases/latest \
-      | jq -r '.assets[] | select(.name | test("vsts-agent-linux-x64-.+\\.tar\\.gz$")) | .browser_download_url') \
-    && curl -fsSL "${AZP_AGENT_URL}" -o azp-agent.tar.gz \
+RUN AGENT_VERSION=$(curl -fsSL https://api.github.com/repos/microsoft/azure-pipelines-agent/releases/latest \
+      | jq -r '.tag_name' | sed 's/^v//') \
+    && curl -fsSL "https://download.agent.dev.azure.com/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz" \
+         -o azp-agent.tar.gz \
     && tar xzf azp-agent.tar.gz \
     && rm azp-agent.tar.gz \
     && ./bin/installdependencies.sh \
