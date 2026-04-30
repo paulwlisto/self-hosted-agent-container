@@ -94,7 +94,10 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 COPY linux/requirements.txt /tmp/requirements.txt
 RUN curl -fsSL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py \
     && python3.11 /tmp/get-pip.py --ignore-installed \
-    && python3.11 -m pip install --no-cache-dir -r /tmp/requirements.txt \
+    && python3.11 -m pip install --no-cache-dir --upgrade pip \
+    && python3.11 -m pip install --no-cache-dir \
+         cffi cryptography \
+         -r /tmp/requirements.txt \
     && rm /tmp/get-pip.py /tmp/requirements.txt
 
 # Agent user and Azure Pipelines Agent
