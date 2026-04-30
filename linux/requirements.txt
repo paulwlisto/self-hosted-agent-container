@@ -1,0 +1,16 @@
+# Requirements for AgileAgents initialization scripts
+# Core Azure SDK packages
+azure-cosmos>=4.5.0
+azure-storage-blob>=12.19.0
+
+# Password hashing
+bcrypt>=4.1.0
+
+# Environment variable handling
+python-dotenv>=1.0.0
+
+# Standard library dependencies (included for completeness)
+# uuid - built-in
+# sys - built-in
+# datetime - built-in
+# os - built-in

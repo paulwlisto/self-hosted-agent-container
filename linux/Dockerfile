@@ -90,6 +90,12 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
         python3.11-distutils \
     && rm -rf /var/lib/apt/lists/*
 
+# Python 3.11 packages for AgileAgents initialization scripts
+COPY linux/requirements.txt /tmp/requirements.txt
+RUN curl -fsSL https://bootstrap.pypa.io/get-pip.py | python3.11 - \
+    && python3.11 -m pip install --no-cache-dir -r /tmp/requirements.txt \
+    && rm /tmp/requirements.txt
+
 # Agent user and Azure Pipelines Agent
 RUN useradd -m agent
 WORKDIR /home/agent/azp-agent
