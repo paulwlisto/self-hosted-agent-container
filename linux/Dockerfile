@@ -20,11 +20,14 @@ RUN apt-get update && apt-get install -y \
     dos2unix \
     software-properties-common \
     pipx \
+    mysql \
+    mysqldump \
     && rm -rf /var/lib/apt/lists/*
 
 # Azure CLI + Bicep
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
     && az bicep install
+    && az extension add --name storage-preview
 
 # .NET SDK 8.0
 RUN curl -fsSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
