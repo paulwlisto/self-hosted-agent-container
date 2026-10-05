@@ -24,16 +24,19 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /etc/apt/keyrings \
-    && curl -sLS https://microsoft.com | gpg --dearmor > /etc/apt/keyrings/microsoft.gpg \
+    && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
+        | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg \
     && chmod go+r /etc/apt/keyrings/microsoft.gpg \
-    && echo "Types: deb\n\
-URIs: https://packages.microsoft.com/ubuntu/24.04/prod/\n\
-Suites: noble\n\
-Components: main\n\
-Architectures: amd64 arm64\n\
-Signed-by: /etc/apt/keyrings/microsoft.gpg" > /etc/apt/sources.list.d/microsoft-prod.sources \
+    && printf '%s\n' \
+        'Types: deb' \
+        'URIs: https://packages.microsoft.com/ubuntu/24.04/prod' \
+        'Suites: noble' \
+        'Components: main' \
+        'Architectures: amd64 arm64' \
+        'Signed-By: /etc/apt/keyrings/microsoft.gpg' \
+        > /etc/apt/sources.list.d/microsoft-prod.sources \
     && apt-get update \
-    && apt-get install -y azcopy \
+    && apt-get install -y --no-install-recommends azcopy \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. (Optional) Set the environment variable so AzCopy automatically shares the CLI's login
