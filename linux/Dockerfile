@@ -23,25 +23,6 @@ RUN apt-get update && apt-get install -y \
     mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /etc/apt/keyrings \
-    && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
-        | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg \
-    && chmod go+r /etc/apt/keyrings/microsoft.gpg \
-    && printf '%s\n' \
-        'Types: deb' \
-        'URIs: https://packages.microsoft.com/ubuntu/24.04/prod' \
-        'Suites: noble' \
-        'Components: main' \
-        'Architectures: amd64 arm64' \
-        'Signed-By: /etc/apt/keyrings/microsoft.gpg' \
-        > /etc/apt/sources.list.d/microsoft-prod.sources \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends azcopy \
-    && rm -rf /var/lib/apt/lists/*
-
-# 2. (Optional) Set the environment variable so AzCopy automatically shares the CLI's login
-ENV AZCOPY_AUTO_LOGIN_TYPE="AZCLI"
-
 # Azure CLI + Bicep
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
     && az bicep install
@@ -50,8 +31,11 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
 RUN curl -fsSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
     && rm packages-microsoft-prod.deb \
-    && apt-get update && apt-get install -y dotnet-sdk-8.0 \
+    && apt-get update && apt-get install -y dotnet-sdk-8.0 azcopy \
     && rm -rf /var/lib/apt/lists/*
+
+# 2. (Optional) Set the environment variable so AzCopy automatically shares the CLI's login
+ENV AZCOPY_AUTO_LOGIN_TYPE="AZCLI"
 
 # Terraform & Packer (HashiCorp)
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg \
