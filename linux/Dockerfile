@@ -27,7 +27,12 @@ RUN apt-get update && apt-get install -y \
 # Azure CLI + Bicep
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
     && az bicep install
-    && az extension add --name storage-preview
+
+# 1. Install AzCopy cleanly using your existing package manager
+RUN apt-get update && apt-get install -y azcopy
+
+# 2. (Optional) Set the environment variable so AzCopy automatically shares the CLI's login
+ENV AZCOPY_AUTO_LOGIN_TYPE="AZCLI"
 
 # .NET SDK 8.0
 RUN curl -fsSL https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
