@@ -27,10 +27,10 @@ RUN mkdir -p /etc/apt/keyrings \
     && curl -sLS https://microsoft.com | gpg --dearmor > /etc/apt/keyrings/microsoft.gpg \
     && chmod go+r /etc/apt/keyrings/microsoft.gpg \
     && echo "Types: deb\n\
-URIs: https://microsoft.com(lsb_release -rs)/\n\
-Suites: $(lsb_release -cs)\n\
+URIs: https://packages.microsoft.com/ubuntu/24.04/prod/\n\
+Suites: noble\n\
 Components: main\n\
-Architectures: $(dpkg --print-architecture)\n\
+Architectures: amd64 arm64\n\
 Signed-by: /etc/apt/keyrings/microsoft.gpg" > /etc/apt/sources.list.d/microsoft-prod.sources \
     && apt-get update \
     && apt-get install -y azcopy \
