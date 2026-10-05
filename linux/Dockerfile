@@ -2,17 +2,6 @@ FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Add AzCopy mirror
-RUN mkdir -p /etc/apt/keyrings \
-    && curl -sLS https://microsoft.com | gpg --dearmor > /etc/apt/keyrings/microsoft.gpg \
-    && chmod go+r /etc/apt/keyrings/microsoft.gpg \
-    && echo "Types: deb\n\
-URIs: https://microsoft.com(lsb_release -rs)/\n\
-Suites: $(lsb_release -cs)\n\
-Components: main\n\
-Architectures: $(dpkg --print-architecture)\n\
-Signed-by: /etc/apt/keyrings/microsoft.gpg" > /etc/apt/sources.list.d/microsoft-prod.sources
-
 # System packages
 RUN apt-get update && apt-get install -y \
     apt-utils \
@@ -32,7 +21,19 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     pipx \
     mysql-client \
-    azcopy \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -sLS https://microsoft.com | gpg --dearmor > /etc/apt/keyrings/microsoft.gpg \
+    && chmod go+r /etc/apt/keyrings/microsoft.gpg \
+    && echo "Types: deb\n\
+URIs: https://microsoft.com(lsb_release -rs)/\n\
+Suites: $(lsb_release -cs)\n\
+Components: main\n\
+Architectures: $(dpkg --print-architecture)\n\
+Signed-by: /etc/apt/keyrings/microsoft.gpg" > /etc/apt/sources.list.d/microsoft-prod.sources \
+    && apt-get update \
+    && apt-get install -y azcopy \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. (Optional) Set the environment variable so AzCopy automatically shares the CLI's login
