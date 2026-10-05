@@ -28,7 +28,17 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
     && az bicep install
 
 # 1. Install AzCopy cleanly using your existing package manager
-RUN apt-get update && apt-get install -y azcopy
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -sLS https://microsoft.com | gpg --dearmor > /etc/apt/keyrings/microsoft.gpg \
+    && chmod go+r /etc/apt/keyrings/microsoft.gpg \
+    && echo "Types: deb\n\
+URIs: https://microsoft.com(lsb_release -rs)/\n\
+Suites: $(lsb_release -cs)\n\
+Components: main\n\
+Architectures: $(dpkg --print-architecture)\n\
+Signed-by: /etc/apt/keyrings/microsoft.gpg" > /etc/apt/sources.list.d/microsoft-prod.sources \
+    && apt-get update \
+    && apt-get install -y azcopy
 
 # 2. (Optional) Set the environment variable so AzCopy automatically shares the CLI's login
 ENV AZCOPY_AUTO_LOGIN_TYPE="AZCLI"
