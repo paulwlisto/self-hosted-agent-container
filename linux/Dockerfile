@@ -20,8 +20,7 @@ RUN apt-get update && apt-get install -y \
     dos2unix \
     software-properties-common \
     pipx \
-    mysql \
-    mysqldump \
+    mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Azure CLI + Bicep
